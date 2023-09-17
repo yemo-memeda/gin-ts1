@@ -8,6 +8,16 @@ import (
 )
 
 // log test
+package main
+
+import (
+"github.com/gin-gonic/gin"
+"jassue-gin/bootstrap"
+"jassue-gin/global"
+"net/http"
+)
+
+//add db init tests
 func main() {
 	// 初始化配置
 	bootstrap.InitializeConfig()
@@ -15,6 +25,16 @@ func main() {
 	// 初始化日志
 	global.App.Log = bootstrap.InitializeLog()
 	global.App.Log.Info("log init success!")
+
+	// 初始化数据库
+	global.App.DB = bootstrap.InitializeDB()
+	// 程序关闭前，释放数据库连接
+	defer func() {
+		if global.App.DB != nil {
+			db, _ := global.App.DB.DB()
+			db.Close()
+		}
+	}()
 
 	r := gin.Default()
 
@@ -26,3 +46,4 @@ func main() {
 	// 启动服务器
 	r.Run(":" + global.App.Config.App.Port)
 }
+

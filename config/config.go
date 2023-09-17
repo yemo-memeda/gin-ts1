@@ -1,6 +1,7 @@
 package config
 
 type Configuration struct {
-	App App `json:"app"`
-	Log Log `json:"log"`
+	App      App      `json:"app"`
+	Log      Log      `json:"log"`
+	Database Database `json:"db"`
 }
