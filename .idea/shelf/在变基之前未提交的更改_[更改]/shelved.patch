@@ -1,0 +1,143 @@
+Index: main.go
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package main\n\nimport (\n\t\"github.com/gin-gonic/gin\"\n\t\"net/http\"\n)\n\nfunc main() {\n\tr := gin.Default()\n\n\t// 测试路由\n\tr.GET(\"/ping\", func(c *gin.Context) {\n\t\tc.String(http.StatusOK, \"pong\")\n\t})\n\n\t// 启动服务器\n\tr.Run(\":8080\")\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/main.go b/main.go
+--- a/main.go	(revision 055614ea4d60566b4ca6dc87f42a71520c5c3e2c)
++++ b/main.go	(date 1694961932118)
+@@ -2,10 +2,15 @@
+ 
+ import (
+ 	"github.com/gin-gonic/gin"
++	"github.com/yemo-memeda/gin-ts1/bootstrap"
++	"github.com/yemo-memeda/gin-ts1/global"
+ 	"net/http"
+ )
+ 
+ func main() {
++	// 初始化配置
++	bootstrap.InitializeConfig()
++
+ 	r := gin.Default()
+ 
+ 	// 测试路由
+@@ -14,5 +19,5 @@
+ 	})
+ 
+ 	// 启动服务器
+-	r.Run(":8080")
++	r.Run(":" + global.App.Config.App.Port)
+ }
+Index: global/App.go
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/global/App.go b/global/App.go
+new file mode 100644
+--- /dev/null	(date 1694958558503)
++++ b/global/App.go	(date 1694958558503)
+@@ -0,0 +1,13 @@
++package global
++
++import (
++	"github.com/spf13/viper"
++	"github.com/yemo-memeda/gin-ts1/config"
++)
++
++type Application struct {
++	ConfigViper *viper.Viper
++	Config      config.Configuration
++}
++
++var App = new(Application)
+Index: config/App.go
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/config/App.go b/config/App.go
+new file mode 100644
+--- /dev/null	(date 1694958463838)
++++ b/config/App.go	(date 1694958463838)
+@@ -0,0 +1,8 @@
++package config
++
++type App struct {
++	Env     string `mapstructure:"env" json:"env" yaml:"env"`
++	Port    string `mapstructure:"port" json:"port" yaml:"port"`
++	AppName string `mapstructure:"app_name" json:"app_name" yaml:"app_name"`
++	AppUrl  string `mapstructure:"app_url" json:"app_url" yaml:"app_url"`
++}
+Index: bootstrap/config.go
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/bootstrap/config.go b/bootstrap/config.go
+new file mode 100644
+--- /dev/null	(date 1694961846283)
++++ b/bootstrap/config.go	(date 1694961846283)
+@@ -0,0 +1,42 @@
++package bootstrap
++
++import (
++	"fmt"
++	"github.com/fsnotify/fsnotify"
++	"github.com/spf13/viper"
++	"github.com/yemo-memeda/gin-ts1/global"
++	"os"
++)
++
++func InitializeConfig() *viper.Viper {
++	// 设置配置文件路径
++	config := "config.yaml"
++	// 生产环境可以通过设置环境变量来改变配置文件路径
++	if configEnv := os.Getenv("VIPER_CONFIG"); configEnv != "" {
++		config = configEnv
++	}
++
++	// 初始化 viper
++	v := viper.New()
++	v.SetConfigFile(config)
++	v.SetConfigType("yaml")
++	if err := v.ReadInConfig(); err != nil {
++		panic(fmt.Errorf("read config failed: %s \n", err))
++	}
++
++	// 监听配置文件
++	v.WatchConfig()
++	v.OnConfigChange(func(in fsnotify.Event) {
++		fmt.Println("config file changed:", in.Name)
++		// 重载配置
++		if err := v.Unmarshal(&global.App.Config); err != nil {
++			fmt.Println(err)
++		}
++	})
++	// 将配置赋值给全局变量
++	if err := v.Unmarshal(&global.App.Config); err != nil {
++		fmt.Println(err)
++	}
++
++	return v
++}
+Index: config/config.go
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/config/config.go b/config/config.go
+new file mode 100644
+--- /dev/null	(date 1694958405184)
++++ b/config/config.go	(date 1694958405184)
+@@ -0,0 +1,5 @@
++package config
++
++type Configuration struct {
++	App App `json:"app"`
++}
+diff --git a/config.yaml b/config.yaml
+new file mode 100644
