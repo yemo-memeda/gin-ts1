@@ -2,9 +2,9 @@ package bootstrap
 
 import (
 	"fmt"
+	"gin-ts1/global"
 	"github.com/fsnotify/fsnotify"
 	"github.com/spf13/viper"
-	"github.com/yemo-memeda/gin-ts1/global"
 	"os"
 )
 

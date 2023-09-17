@@ -1,13 +1,15 @@
 package global
 
 import (
+	"gin-ts1/config"
 	"github.com/spf13/viper"
-	"github.com/yemo-memeda/gin-ts1/config"
+	"go.uber.org/zap"
 )
 
 type Application struct {
 	ConfigViper *viper.Viper
 	Config      config.Configuration
+	Log         *zap.Logger
 }
 
 var App = new(Application)

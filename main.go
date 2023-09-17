@@ -1,15 +1,20 @@
 package main
 
 import (
+	"gin-ts1/bootstrap"
+	"gin-ts1/global"
 	"github.com/gin-gonic/gin"
-	"github.com/yemo-memeda/gin-ts1/bootstrap"
-	"github.com/yemo-memeda/gin-ts1/global"
 	"net/http"
 )
 
+// log test
 func main() {
 	// 初始化配置
 	bootstrap.InitializeConfig()
+
+	// 初始化日志
+	global.App.Log = bootstrap.InitializeLog()
+	global.App.Log.Info("log init success!")
 
 	r := gin.Default()
 
