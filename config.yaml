@@ -22,3 +22,6 @@ database:
   enable_file_log_writer: true # 是否启用日志文件
   log_filename: sql.log # 日志文件名称
   log_max_days: 7 # 日志文件最大保留天数
+jwt:
+  secret: 3Bde3BGEbYqtqyEUzW3ry8jKFcaPH17fRmTmqE7MDr05Lwj95uruRKrrkb44TJ4s
+  jwt_ttl: 43200
