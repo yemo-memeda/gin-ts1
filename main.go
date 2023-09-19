@@ -64,6 +64,7 @@ func main() {
 			global.App.Redis.Close()
 		}
 	}()
+	bootstrap.InitializeStorage()
 	// 启动服务器
 	bootstrap.RunServer()
 }

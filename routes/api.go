@@ -3,6 +3,7 @@ package routes
 import (
 	"gin-ts1/app/common/request"
 	"gin-ts1/app/controllers/app"
+	"gin-ts1/app/controllers/common"
 	"gin-ts1/app/middleware"
 	services "gin-ts1/app/service"
 	"github.com/gin-gonic/gin"
@@ -38,6 +39,7 @@ func SetApiGroupRoutes(router *gin.RouterGroup) {
 	{
 		authRouter.POST("/auth/info", app.Info)
 		authRouter.POST("/auth/logout", app.Logout)
+		authRouter.POST("/image_upload", common.ImageUpload)
 	}
 }
 
