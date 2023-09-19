@@ -56,6 +56,14 @@ func main() {
 	// 初始化验证器
 	bootstrap.InitializeValidator()
 
+	// 初始化Redis
+	global.App.Redis = bootstrap.InitializeRedis()
+	// 程序关闭前，释放Redis连接
+	defer func() {
+		if global.App.Redis != nil {
+			global.App.Redis.Close()
+		}
+	}()
 	// 启动服务器
 	bootstrap.RunServer()
 }

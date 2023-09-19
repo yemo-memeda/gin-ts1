@@ -1,8 +1,9 @@
 package config
 
 type Configuration struct {
-	App      App      `json:"app"`
-	Log      Log      `json:"log"`
-	Database Database `json:"db"`
+	App      App      `mapstructure:"app" json:"app" yaml:"app"`
+	Log      Log      `mapstructure:"json" json:"log" yaml:"log"`
+	Database Database `mapstructure:"db" json:"db" yaml:"db"`
 	Jwt      Jwt      `mapstructure:"jwt" json:"jwt" yaml:"jwt"`
+	Redis    Redis    `mapstructure:"redis" json:"redis" yaml:"redis"`
 }
